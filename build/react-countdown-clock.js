@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React, _canvas, _context, _fraction, _radius;
+	var React, _canvas, _context, _fraction, _radius, _timer;
 	
 	React = __webpack_require__(1);
 	
@@ -65,6 +65,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	_context = null;
 	
 	_canvas = null;
+	
+	_timer = null;
 	
 	module.exports = React.createClass({
 	  propTypes: {
@@ -96,6 +98,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      seconds: props.seconds
 	    });
 	  },
+	  componentWillUnmount: function() {
+	    return clearTimeout(_timer);
+	  },
 	  componentDidMount: function() {
 	    this._setScale();
 	    this._setupCanvas();
@@ -122,7 +127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _context.font = "bold " + (_radius / 2) + "px Arial";
 	  },
 	  _startTimer: function() {
-	    return setTimeout(((function(_this) {
+	    return _timer = setTimeout(((function(_this) {
 	      return function() {
 	        return _this._tick();
 	      };
@@ -150,6 +155,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  },
 	  _clearTimer: function() {
+	    clearTimeout(_timer);
 	    _context.clearRect(0, 0, _canvas.width, _canvas.height);
 	    return this._drawBackground();
 	  },

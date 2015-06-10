@@ -4,6 +4,7 @@ _radius   = null
 _fraction = null
 _context  = null
 _canvas   = null
+_timer    = null
 
 module.exports = React.createClass
   propTypes:
@@ -28,6 +29,9 @@ module.exports = React.createClass
     @_drawTimer()
     @_startTimer()
     @setState seconds: props.seconds
+
+  componentWillUnmount: ->
+    clearTimeout(_timer)
 
   componentDidMount: ->
     @_setScale()
@@ -55,7 +59,7 @@ module.exports = React.createClass
 
   _startTimer: ->
     # Give it a moment to collect it's thoughts for smoother render
-    setTimeout ( => @_tick() ), 200
+    _timer = setTimeout ( => @_tick() ), 200
 
   _tick: ->
     start = Date.now()
@@ -71,6 +75,7 @@ module.exports = React.createClass
       @props.onComplete()
 
   _clearTimer: ->
+    clearTimeout(_timer)
     _context.clearRect 0, 0, _canvas.width, _canvas.height
     @_drawBackground()
 
