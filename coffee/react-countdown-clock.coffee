@@ -5,6 +5,7 @@ _fraction = null
 _context  = null
 _canvas   = null
 _timer    = null
+_tick     = null
 
 module.exports = React.createClass
   propTypes:
@@ -24,6 +25,7 @@ module.exports = React.createClass
     seconds: @props.seconds
 
   componentWillReceiveProps: (props) ->
+    clearTimeout(_timer)
     @_setScale()
     @_setupCanvas()
     @_drawTimer()
@@ -63,19 +65,20 @@ module.exports = React.createClass
 
   _tick: ->
     start = Date.now()
-    setTimeout ( =>
+    _tick = setTimeout ( =>
       duration = Date.now() - start
+      clearTimeout(_tick)
       @setState
         seconds: Math.max(0,@state.seconds - duration / 1000)
       @_tick() unless @state.seconds <= 0
     ), 30
 
   _handleComplete: ->
+    clearTimeout(_timer)
     if @props.onComplete
       @props.onComplete()
 
   _clearTimer: ->
-    clearTimeout(_timer)
     _context.clearRect 0, 0, _canvas.width, _canvas.height
     @_drawBackground()
 
