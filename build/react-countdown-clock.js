@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React, _canvas, _context, _fraction, _radius, _timer;
+	var React, _canvas, _context, _fraction, _radius, _tick, _timer;
 	
 	React = __webpack_require__(1);
 	
@@ -67,6 +67,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	_canvas = null;
 	
 	_timer = null;
+	
+	_tick = null;
 	
 	module.exports = React.createClass({
 	  propTypes: {
@@ -90,6 +92,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	  },
 	  componentWillReceiveProps: function(props) {
+	    clearTimeout(_timer);
 	    this._setScale();
 	    this._setupCanvas();
 	    this._drawTimer();
@@ -99,7 +102,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  },
 	  componentWillUnmount: function() {
-	    return clearTimeout(_timer);
+	    clearTimeout(_timer);
+	    return clearTimeout(_tick);
 	  },
 	  componentDidMount: function() {
 	    this._setScale();
@@ -136,10 +140,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _tick: function() {
 	    var start;
 	    start = Date.now();
-	    return setTimeout(((function(_this) {
+	    return _tick = setTimeout(((function(_this) {
 	      return function() {
 	        var duration;
 	        duration = Date.now() - start;
+	        clearTimeout(_tick);
 	        _this.setState({
 	          seconds: Math.max(0, _this.state.seconds - duration / 1000)
 	        });
@@ -150,12 +155,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    })(this)), 30);
 	  },
 	  _handleComplete: function() {
+	    clearTimeout(_timer);
 	    if (this.props.onComplete) {
 	      return this.props.onComplete();
 	    }
 	  },
 	  _clearTimer: function() {
-	    clearTimeout(_timer);
 	    _context.clearRect(0, 0, _canvas.width, _canvas.height);
 	    return this._drawBackground();
 	  },

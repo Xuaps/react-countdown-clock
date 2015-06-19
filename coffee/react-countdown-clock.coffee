@@ -33,6 +33,7 @@ module.exports = React.createClass
     @setState seconds: props.seconds
 
   componentWillUnmount: ->
+    clearTimeout(_tick)
     clearTimeout(_timer)
 
   componentDidMount: ->
